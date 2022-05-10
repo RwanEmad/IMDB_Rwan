@@ -1,0 +1,75 @@
+﻿@{
+    ViewBag.Title = "creatMovies";
+}
+@Styles.Render("~/Content/creatMovies.css")
+@Scripts.Render("~/Content/creatMovies.js")
+
+  
+<div class="header">
+    <h1>Creat Movie </h1>
+</div>
+
+<div class="form">
+
+    <form action="/action_page.php">
+
+        <label class="label" for="moviename" name="name"> Movie Name</label>
+        <br />
+        <input type="text" id="name" name="name" class="name" placeholder="movie name">
+
+        <br />
+        <label class="label" for="dname" name="director_name">Director Name </label>
+        <br />
+        <div id="directors" class="directors">
+            <input type="text" id="dfname" name="dname" placeholder="first name">
+            <!-- <input type="text" id="dlname" name="dname" placeholder="last name">-->
+        </div>
+            <br />
+
+            <label class="label" for="actorname">Actor Name</label>
+            <br />
+
+            <div id="actors_name" class="actors_name">
+                <input type="text" id="afname" name="afname" placeholder="first name">
+                <!-- <input type="text" id="alname" name="alname" placeholder="last name">-->
+            </div>
+        
+        <button type="button" class="add-actor" onclick="add_actor()">+</button>
+        <br />
+    </form>
+</div>
+
+<div class="vl"> </div>
+
+<div class="poster">
+
+    <h4>Poster</h4>
+    <div class="photo">
+        <button type="button" class="add">
+            <img class="poster_img" src="../../images/poster.svg" alt="...">
+            <h5>Choose a Photo</h5>
+        </button>
+    </div>
+    <h4>Discription</h4>
+    <textarea name="text" class="textarea1"></textarea>
+
+</div>
+
+
+
+<button type="submit" class="creat" 
+        style="
+                 width: 130px;
+                 height: 55px;
+                 margin-left: 90%;
+                 color: rgba(255,255,255,0.5);
+                 border-radius:15px; "> Creat </button>
+
+
+
+
+
+
+
+
+<!--<textarea name="text" class="textarea1"></textarea>-->

@@ -1,0 +1,33 @@
+﻿
+@{
+    ViewBag.Title = "contact3";
+}
+@Styles.Render("~/Content/contact3.css")
+
+
+
+<div class="content">
+    <h1>Contact Us</h1>
+    <form action="/action_page.php">
+
+        <br />
+        <label class="label" for="fname"> Name</label>
+        <br />
+        <input type="text" id="name" name="name">
+
+        <br />
+        <label class="label" for="Email">Email</label>
+        <br />
+        <input type="text" id="email" name="email">
+        <br />
+
+        <label class="label" for="Message">Message</label>
+        <br />
+        <textarea name="text" class="textarea1"></textarea>
+
+
+    </form>
+    <input type="submit" value="Send">
+</div>
+
+

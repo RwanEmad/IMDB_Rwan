@@ -1,0 +1,656 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="IMDbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Cast">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="255" />
+          <Property Name="age" Type="int" />
+          <Property Name="image" Type="nvarchar" MaxLength="255" />
+          <Property Name="role" Type="nvarchar" MaxLength="255" />
+          <Property Name="bio" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'IMDb.dbo.Comments' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Comments">
+          <Key>
+            <PropertyRef Name="user_id" />
+            <PropertyRef Name="movie_id" />
+          </Key>
+          <Property Name="user_id" Type="int" Nullable="false" />
+          <Property Name="movie_id" Type="int" Nullable="false" />
+          <Property Name="comment" Type="nvarchar" MaxLength="1000" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'IMDb.dbo.Favorite_Cast' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Favorite_Cast">
+          <Key>
+            <PropertyRef Name="user_id" />
+            <PropertyRef Name="cast_id" />
+          </Key>
+          <Property Name="user_id" Type="int" Nullable="false" />
+          <Property Name="cast_id" Type="int" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'IMDb.dbo.Favorite_Movies' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Favorite_Movies">
+          <Key>
+            <PropertyRef Name="user_id" />
+            <PropertyRef Name="movie_id" />
+          </Key>
+          <Property Name="user_id" Type="int" Nullable="false" />
+          <Property Name="movie_id" Type="int" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'IMDb.dbo.likes' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="likes">
+          <Key>
+            <PropertyRef Name="user_id" />
+            <PropertyRef Name="movie_id" />
+          </Key>
+          <Property Name="user_id" Type="int" Nullable="false" />
+          <Property Name="movie_id" Type="int" Nullable="false" />
+          <Property Name="like" Type="bit" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'IMDb.dbo.Movie_images' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Movie_images">
+          <Key>
+            <PropertyRef Name="movie_id" />
+          </Key>
+          <Property Name="movie_id" Type="int" Nullable="false" />
+          <Property Name="image" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="Movies">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="255" />
+          <Property Name="description" Type="nvarchar" MaxLength="255" />
+          <Property Name="likes" Type="int" />
+          <Property Name="dislikes" Type="int" />
+          <Property Name="rate" Type="int" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'IMDb.dbo.Staff' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Staff">
+          <Key>
+            <PropertyRef Name="cast_id" />
+            <PropertyRef Name="movie_id" />
+          </Key>
+          <Property Name="cast_id" Type="int" Nullable="false" />
+          <Property Name="movie_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="255" />
+          <Property Name="email" Type="nvarchar" MaxLength="255" />
+          <Property Name="password" Type="nvarchar" MaxLength="255" />
+          <Property Name="image" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <Association Name="FK_comments_movies">
+          <End Role="Movies" Type="Self.Movies" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Comments" Type="Self.Comments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Movies">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Comments">
+              <PropertyRef Name="movie_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_comments_users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Comments" Type="Self.Comments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Comments">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_fav_cast_cast">
+          <End Role="Cast" Type="Self.Cast" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Favorite_Cast" Type="Self.Favorite_Cast" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cast">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Favorite_Cast">
+              <PropertyRef Name="cast_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_fav_cast_user">
+          <End Role="Users" Type="Self.Users" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Favorite_Cast" Type="Self.Favorite_Cast" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Favorite_Cast">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_fav_movie_movie">
+          <End Role="Movies" Type="Self.Movies" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Favorite_Movies" Type="Self.Favorite_Movies" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Movies">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Favorite_Movies">
+              <PropertyRef Name="movie_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_fav_movie_user">
+          <End Role="Users" Type="Self.Users" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Favorite_Movies" Type="Self.Favorite_Movies" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Favorite_Movies">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_likes_movie">
+          <End Role="Movies" Type="Self.Movies" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="likes" Type="Self.likes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Movies">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="likes">
+              <PropertyRef Name="movie_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_likes_user">
+          <End Role="Users" Type="Self.Users" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="likes" Type="Self.likes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="likes">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_movie_images">
+          <End Role="Movies" Type="Self.Movies" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Movie_images" Type="Self.Movie_images" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Movies">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Movie_images">
+              <PropertyRef Name="movie_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_staff_cast">
+          <End Role="Cast" Type="Self.Cast" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Staff" Type="Self.Staff" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cast">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Staff">
+              <PropertyRef Name="cast_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_staff_movie">
+          <End Role="Movies" Type="Self.Movies" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Staff" Type="Self.Staff" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Movies">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Staff">
+              <PropertyRef Name="movie_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="IMDbModelStoreContainer">
+          <EntitySet Name="Cast" EntityType="Self.Cast" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Movies" EntityType="Self.Movies" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Comments" EntityType="Self.Comments" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Comments].[user_id] AS [user_id], 
+    [Comments].[movie_id] AS [movie_id], 
+    [Comments].[comment] AS [comment]
+    FROM [dbo].[Comments] AS [Comments]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="Favorite_Cast" EntityType="Self.Favorite_Cast" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Favorite_Cast].[user_id] AS [user_id], 
+    [Favorite_Cast].[cast_id] AS [cast_id]
+    FROM [dbo].[Favorite_Cast] AS [Favorite_Cast]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="Favorite_Movies" EntityType="Self.Favorite_Movies" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Favorite_Movies].[user_id] AS [user_id], 
+    [Favorite_Movies].[movie_id] AS [movie_id]
+    FROM [dbo].[Favorite_Movies] AS [Favorite_Movies]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="likes" EntityType="Self.likes" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [likes].[user_id] AS [user_id], 
+    [likes].[movie_id] AS [movie_id], 
+    [likes].[like] AS [like]
+    FROM [dbo].[likes] AS [likes]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="Movie_images" EntityType="Self.Movie_images" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Movie_images].[movie_id] AS [movie_id], 
+    [Movie_images].[image] AS [image]
+    FROM [dbo].[Movie_images] AS [Movie_images]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="Staff" EntityType="Self.Staff" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Staff].[cast_id] AS [cast_id], 
+    [Staff].[movie_id] AS [movie_id]
+    FROM [dbo].[Staff] AS [Staff]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_comments_movies" Association="Self.FK_comments_movies">
+            <End Role="Movies" EntitySet="Movies" />
+            <End Role="Comments" EntitySet="Comments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_comments_users" Association="Self.FK_comments_users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Comments" EntitySet="Comments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_fav_cast_cast" Association="Self.FK_fav_cast_cast">
+            <End Role="Cast" EntitySet="Cast" />
+            <End Role="Favorite_Cast" EntitySet="Favorite_Cast" />
+          </AssociationSet>
+          <AssociationSet Name="FK_fav_cast_user" Association="Self.FK_fav_cast_user">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Favorite_Cast" EntitySet="Favorite_Cast" />
+          </AssociationSet>
+          <AssociationSet Name="FK_fav_movie_movie" Association="Self.FK_fav_movie_movie">
+            <End Role="Movies" EntitySet="Movies" />
+            <End Role="Favorite_Movies" EntitySet="Favorite_Movies" />
+          </AssociationSet>
+          <AssociationSet Name="FK_fav_movie_user" Association="Self.FK_fav_movie_user">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Favorite_Movies" EntitySet="Favorite_Movies" />
+          </AssociationSet>
+          <AssociationSet Name="FK_likes_movie" Association="Self.FK_likes_movie">
+            <End Role="Movies" EntitySet="Movies" />
+            <End Role="likes" EntitySet="likes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_likes_user" Association="Self.FK_likes_user">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="likes" EntitySet="likes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_movie_images" Association="Self.FK_movie_images">
+            <End Role="Movies" EntitySet="Movies" />
+            <End Role="Movie_images" EntitySet="Movie_images" />
+          </AssociationSet>
+          <AssociationSet Name="FK_staff_cast" Association="Self.FK_staff_cast">
+            <End Role="Cast" EntitySet="Cast" />
+            <End Role="Staff" EntitySet="Staff" />
+          </AssociationSet>
+          <AssociationSet Name="FK_staff_movie" Association="Self.FK_staff_movie">
+            <End Role="Movies" EntitySet="Movies" />
+            <End Role="Staff" EntitySet="Staff" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="IMDbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Cast">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="age" Type="Int32" />
+          <Property Name="image" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="role" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="bio" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Users" Relationship="Self.Favorite_Cast" FromRole="Cast" ToRole="Users" />
+          <NavigationProperty Name="Movies" Relationship="Self.Staff" FromRole="Cast" ToRole="Movies" />
+        </EntityType>
+        <EntityType Name="Movy">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="description" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="likes" Type="Int32" />
+          <Property Name="dislikes" Type="Int32" />
+          <Property Name="rate" Type="Int32" />
+          <NavigationProperty Name="Comments" Relationship="Self.FK_comments_movies" FromRole="Movies" ToRole="Comments" />
+          <NavigationProperty Name="likes1" Relationship="Self.FK_likes_movie" FromRole="Movies" ToRole="likes" />
+          <NavigationProperty Name="Movie_images" Relationship="Self.FK_movie_images" FromRole="Movies" ToRole="Movie_images" />
+          <NavigationProperty Name="Users" Relationship="Self.Favorite_Movies" FromRole="Movies" ToRole="Users" />
+          <NavigationProperty Name="Casts" Relationship="Self.Staff" FromRole="Movies" ToRole="Cast" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="email" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="password" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="image" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Comments" Relationship="Self.FK_comments_users" FromRole="Users" ToRole="Comments" />
+          <NavigationProperty Name="likes" Relationship="Self.FK_likes_user" FromRole="Users" ToRole="likes" />
+          <NavigationProperty Name="Casts" Relationship="Self.Favorite_Cast" FromRole="Users" ToRole="Cast" />
+          <NavigationProperty Name="Movies" Relationship="Self.Favorite_Movies" FromRole="Users" ToRole="Movies" />
+        </EntityType>
+        <EntityType Name="Comment">
+          <Key>
+            <PropertyRef Name="user_id" />
+            <PropertyRef Name="movie_id" />
+          </Key>
+          <Property Name="user_id" Type="Int32" Nullable="false" />
+          <Property Name="movie_id" Type="Int32" Nullable="false" />
+          <Property Name="comment1" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Movy" Relationship="Self.FK_comments_movies" FromRole="Comments" ToRole="Movies" />
+          <NavigationProperty Name="User" Relationship="Self.FK_comments_users" FromRole="Comments" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="like">
+          <Key>
+            <PropertyRef Name="user_id" />
+            <PropertyRef Name="movie_id" />
+          </Key>
+          <Property Name="user_id" Type="Int32" Nullable="false" />
+          <Property Name="movie_id" Type="Int32" Nullable="false" />
+          <Property Name="like1" Type="Boolean" />
+          <NavigationProperty Name="Movy" Relationship="Self.FK_likes_movie" FromRole="likes" ToRole="Movies" />
+          <NavigationProperty Name="User" Relationship="Self.FK_likes_user" FromRole="likes" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="Movie_images">
+          <Key>
+            <PropertyRef Name="movie_id" />
+          </Key>
+          <Property Name="movie_id" Type="Int32" Nullable="false" />
+          <Property Name="image" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Movy" Relationship="Self.FK_movie_images" FromRole="Movie_images" ToRole="Movies" />
+        </EntityType>
+        <Association Name="FK_comments_movies">
+          <End Role="Movies" Type="Self.Movy" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Comments" Type="Self.Comment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Movies">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Comments">
+              <PropertyRef Name="movie_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_likes_movie">
+          <End Role="Movies" Type="Self.Movy" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="likes" Type="Self.like" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Movies">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="likes">
+              <PropertyRef Name="movie_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_movie_images">
+          <End Role="Movies" Type="Self.Movy" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Movie_images" Type="Self.Movie_images" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Movies">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Movie_images">
+              <PropertyRef Name="movie_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_comments_users">
+          <End Role="Users" Type="Self.User" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Comments" Type="Self.Comment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Comments">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_likes_user">
+          <End Role="Users" Type="Self.User" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="likes" Type="Self.like" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="likes">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Favorite_Cast">
+          <End Role="Cast" Type="Self.Cast" Multiplicity="*" />
+          <End Role="Users" Type="Self.User" Multiplicity="*" />
+        </Association>
+        <Association Name="Favorite_Movies">
+          <End Role="Movies" Type="Self.Movy" Multiplicity="*" />
+          <End Role="Users" Type="Self.User" Multiplicity="*" />
+        </Association>
+        <Association Name="Staff">
+          <End Role="Cast" Type="Self.Cast" Multiplicity="*" />
+          <End Role="Movies" Type="Self.Movy" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="IMDbEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Casts" EntityType="Self.Cast" />
+          <EntitySet Name="Movies" EntityType="Self.Movy" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <EntitySet Name="Comments" EntityType="Self.Comment" />
+          <EntitySet Name="likes" EntityType="Self.like" />
+          <EntitySet Name="Movie_images" EntityType="Self.Movie_images" />
+          <AssociationSet Name="FK_comments_movies" Association="Self.FK_comments_movies">
+            <End Role="Movies" EntitySet="Movies" />
+            <End Role="Comments" EntitySet="Comments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_likes_movie" Association="Self.FK_likes_movie">
+            <End Role="Movies" EntitySet="Movies" />
+            <End Role="likes" EntitySet="likes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_movie_images" Association="Self.FK_movie_images">
+            <End Role="Movies" EntitySet="Movies" />
+            <End Role="Movie_images" EntitySet="Movie_images" />
+          </AssociationSet>
+          <AssociationSet Name="FK_comments_users" Association="Self.FK_comments_users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Comments" EntitySet="Comments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_likes_user" Association="Self.FK_likes_user">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="likes" EntitySet="likes" />
+          </AssociationSet>
+          <AssociationSet Name="Favorite_Cast" Association="Self.Favorite_Cast">
+            <End Role="Cast" EntitySet="Casts" />
+            <End Role="Users" EntitySet="Users" />
+          </AssociationSet>
+          <AssociationSet Name="Favorite_Movies" Association="Self.Favorite_Movies">
+            <End Role="Movies" EntitySet="Movies" />
+            <End Role="Users" EntitySet="Users" />
+          </AssociationSet>
+          <AssociationSet Name="Staff" Association="Self.Staff">
+            <End Role="Cast" EntitySet="Casts" />
+            <End Role="Movies" EntitySet="Movies" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="IMDbModelStoreContainer" CdmEntityContainer="IMDbEntities">
+          <EntitySetMapping Name="Casts">
+            <EntityTypeMapping TypeName="IMDbModel.Cast">
+              <MappingFragment StoreEntitySet="Cast">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="age" ColumnName="age" />
+                <ScalarProperty Name="image" ColumnName="image" />
+                <ScalarProperty Name="role" ColumnName="role" />
+                <ScalarProperty Name="bio" ColumnName="bio" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Movies">
+            <EntityTypeMapping TypeName="IMDbModel.Movy">
+              <MappingFragment StoreEntitySet="Movies">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="likes" ColumnName="likes" />
+                <ScalarProperty Name="dislikes" ColumnName="dislikes" />
+                <ScalarProperty Name="rate" ColumnName="rate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="IMDbModel.User">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="image" ColumnName="image" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Comments">
+            <EntityTypeMapping TypeName="IMDbModel.Comment">
+              <MappingFragment StoreEntitySet="Comments">
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="movie_id" ColumnName="movie_id" />
+                <ScalarProperty Name="comment1" ColumnName="comment" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="likes">
+            <EntityTypeMapping TypeName="IMDbModel.like">
+              <MappingFragment StoreEntitySet="likes">
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="movie_id" ColumnName="movie_id" />
+                <ScalarProperty Name="like1" ColumnName="like" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Movie_images">
+            <EntityTypeMapping TypeName="IMDbModel.Movie_images">
+              <MappingFragment StoreEntitySet="Movie_images">
+                <ScalarProperty Name="movie_id" ColumnName="movie_id" />
+                <ScalarProperty Name="image" ColumnName="image" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="Favorite_Cast" TypeName="IMDbModel.Favorite_Cast" StoreEntitySet="Favorite_Cast">
+            <EndProperty Name="Cast">
+              <ScalarProperty Name="id" ColumnName="cast_id" />
+            </EndProperty>
+            <EndProperty Name="Users">
+              <ScalarProperty Name="id" ColumnName="user_id" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="Favorite_Movies" TypeName="IMDbModel.Favorite_Movies" StoreEntitySet="Favorite_Movies">
+            <EndProperty Name="Movies">
+              <ScalarProperty Name="id" ColumnName="movie_id" />
+            </EndProperty>
+            <EndProperty Name="Users">
+              <ScalarProperty Name="id" ColumnName="user_id" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="Staff" TypeName="IMDbModel.Staff" StoreEntitySet="Staff">
+            <EndProperty Name="Cast">
+              <ScalarProperty Name="id" ColumnName="cast_id" />
+            </EndProperty>
+            <EndProperty Name="Movies">
+              <ScalarProperty Name="id" ColumnName="movie_id" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
